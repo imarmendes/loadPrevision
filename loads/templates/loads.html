@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div>
+        <form  action="{% url 'loads' %}" method="post">
+            {% csrf_token %}
+            <div>
+            <style>
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                
+                table, th, td {
+                    border: 1px solid rgb(54, 171, 238);
+                    padding: 8px;
+                    text-align: center;
+                }
+                
+                th {
+                    background-color: #f2f2f2;
+                }
+
+                .hideThead {
+                    display: none;
+                }
+
+                .center {
+                    text-align: center;
+                }
+            </style>     
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="4">Dimensões</th>
+                        <th colspan="3">Iluminação</th>
+                        <th colspan="3">TUGs</th>
+                    </tr>
+                    <tr>
+                        <!-- Cômodo -->
+                        <th>Dependência</th>
+                        <!-- Dimensões -->
+                        <th>Largura (m)</th>
+                        <th>Altura (m)</th>
+                        <th>Área (m<sup>2</sup>)</th>
+                        <th>Perímetro (m)</th>
+                        <!-- Iluminação -->
+                        <th>Add Iluminação</th>
+                        <th>Potência Ilum</th>
+                        <!-- TUE -->
+                        <th>Add. TUG*</th>
+                        <th>Quant.</th>
+                        <th>Potência VA</th>
+                    </tr>
+                </thead>
+                <tbody id="dryAreasBody" name="dryAreasBody">
+                    <tr>
+                        <th colspan="10" class="center">Àreas Secas</th>
+                    </tr>
+                    {% for d in data.dryAreas %}
+                        <tr>
+                            <td>
+                                <select name="roomDryAreas" value="{{d.room}}" class="form-control w-100">
+                                    {% for name in roomNames.dryRoomNames %}
+                                        {% if name == d.room %}
+                                        <option value="{{name}}" selected>{{name}}</option>
+                                        {% else %}
+                                            <option value="{{name}}">{{name}}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if d.room == "" %}
+                                        <option selected>Selecione...</option>
+                                    {% endif %}
+                                </select>
+                            </td>
+                            <td>
+                                <input name="lengthDryAreas" type="text" placeholder="Largura" value="{{d.length}}" class="form-control w-100">
+                            </td>
+                            <td>
+                                <input name="widthDryAreas" type="text" placeholder="Altura" value="{{d.width}}" class="form-control w-100">
+                            </td>
+                            <td name="areaDryAreas">{{d.area}}</td>
+                            <td name="perimeterDryAreas" >{{d.perimeter}}</td>
+                            <td>
+                                <input name="addLightingDryAreas" type="number" placeholder="Adicionar Iluminação" value="{% if d.addLighting %}{{ d.addLighting }}{% else %}0{% endif %}" class="form-control w-100">
+                            </td>
+                            <td name="lightingPowerDryAreas" >{{d.lightingPower}}</td>
+                            <td>
+                                <input name="addTugDryAreas" type="number" placeholder="Adicionar Tomadas" value="{% if d.addTug %}{{ d.addTug }}{% else %}0{% endif %}" class="form-control w-100">
+                            </td>
+                            <td name="quantityDryAreas">{{d.quantity}}</td>
+                            <td name="powerDryAreas">{{d.power}}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr id="rowBotonIdDryAreas">
+                        <td colspan="10" class="center">
+                            <div class="d-grid gap-2 col-6 mx-auto">
+                                {% csrf_token %}
+                                <input class="btn btn-primary" type="submit" name="addLineDryArea" value="Adicionar linha - Áreas Secas">
+                            </div>
+                        </td>
+                    </tr>
+                    <br>
+                </tbody>
+                <tbody id="wetAreasBody" name="wetAreasBody">
+                    <tr>
+                        <tH colspan="10" class="center">Àreas Molhadas</th>
+                    </tr>
+                    {% for d in data.wetAreas %}
+                        <tr>
+                            <td>
+                                <select name="roomWetAreas" value="{{d.room}}" class="form-control w-100">
+                                    {% for name in roomNames.wetRoomNames %}
+                                        {% if name == d.room %}
+                                        <option value="{{name}}" selected>{{name}}</option>
+                                        {% else %}
+                                            <option value="{{name}}">{{name}}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                        {% if d.room == "" %}
+                                            <option selected>Selecione...</option>
+                                        {% endif %}
+                                </select>
+                            </td>
+                            <td>
+                                <input name="lengthWetAreas" type="text" placeholder="Largura" value="{{d.length}}" class="form-control w-100">
+                            </td>
+                            <td>
+                                <input name="widthWetAreas" type="text" placeholder="Altura" value="{{d.width}}" class="form-control w-100">
+                            </td>
+                            <td name="areaWetAreas">{{d.area}}</td>
+                            <td name="perimeterWetAreas" >{{d.perimeter}}</td>
+                            <td>
+                                <input name="addLightingWetAreas" type="number" placeholder="Adicionar Iluminação" value="{% if d.addLighting %}{{ d.addLighting }}{% else %}0{% endif %}" class="form-control w-100">
+                            </td>
+                            <td name="lightingPowerDryAreas" >{{d.lightingPower}}</td>
+                            <td>
+                                <input name="addTugWetAreas" type="number" placeholder="Adicionar Tomadas" value="{% if d.addTug %}{{ d.addTug }}{% else %}0{% endif %}" class="form-control w-100">
+                            </td>
+                            <td name="quantityWetAreas">{{d.quantity}}</td>
+                            <td name="powerWetAreas">{{d.power}}</td>
+                        </tr>
+                    {% endfor %}                    
+                    <tr id="rowBotonIdWetAreas"></tr>
+                        <td colspan="10" class="center">
+                            <div class="d-grid gap-2 col-6 mx-auto">
+                                {% csrf_token %}
+                                <input class="btn btn-primary" type="submit" name="addLineWetArea" value="Adicionar linha - Áreas Molhadas">
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>   
+            <br>
+            <br>
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="3">TUEs</th>
+                    </tr>
+                    <tr>
+                        <th>Dependência</th>
+                        <th>Descrição</th>
+                        <th>Potência</th>
+                    </tr>
+                </thead>
+                <tbody id="tuesBody" name="tuesBody">
+                    {% for d in data.tues.tueLine %}
+                        <tr>
+                            <td>
+                                <select name="roomNameTue" value="{{d.room}}" class="form-control w-100">
+                                    {% for name in data.tues.roomNamesToTues %}
+                                        {% if name == d.room %}
+                                            <option value="{{name}}" selected>{{name}}</option>
+                                        {% else %}
+                                            <option value="{{name}}">{{name}}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if d.room == "" %}
+                                        <option selected>Selecione...</option>
+                                    {% endif %}
+                                </select>
+                            </td>
+                            <td>
+                                <select name="descriptionTue" value="{{d.decription}}" class="form-control w-100">
+                                    {% for name, power in data.tues.tuesData %}
+                                        {% if name == d.decription %}
+                                            <option value="{{name}}" selected>{{name}}</option>
+                                        {% else %}
+                                            <option value="{{name}}">{{name}}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if d.decription == "" %}
+                                        <option selected>Selecione...</option>
+                                    {% endif %}
+                                </select>
+                            </td>
+                            <td name="powerTue">{{d.power}}</td>
+                        </tr>
+                    {% endfor %}                   
+                    <tr id="rowBotonITues"></tr>
+                        <td colspan="3" class="center">
+                            <div class="d-grid gap-2 col-6 mx-auto">
+                                {% csrf_token %}
+                                <input 
+                                    class="btn btn-primary" 
+                                    type="submit" 
+                                    name="addLineTue" 
+                                    value="Adicionar linha - TUE"
+                                    {% if settings.hasArea %}
+                                    {% else %}
+                                        disabled="disabled"
+                                    {% endif %}
+                                    >
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>         
+            </div>
+        </form>
+    </div>
+    <script src="{% static 'loads/js/loads.js' %}"></script>
+{% endblock %}
