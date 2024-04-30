@@ -24,6 +24,8 @@ def loads(request):
     
     if request.method == 'POST':
         data = getDataToUpdate(request)
+        report = getReport(data)
+        print(report)
         
         if 'addLineDryArea' in request.POST:
             data['dryAreas'].append({
@@ -52,14 +54,14 @@ def loads(request):
                 'power': ''
             })
         elif 'addLineTue' in request.POST:
-            data['tues']['tueLine'].append({'room': '', 'decription': '', 'power': '' })
+            data['tues']['tueLine'].append({'room': '', 'description': '', 'power': '' })
         else:
             print("Nenhum botão foi clicado!")
 
         if( len(data['tues']['roomNamesToTues']) >= 1 ):
             settings['hasArea'] = "true"
 
-        return render(request, 'loads.html', { 'data': data, 'roomNames': roomNames, 'settings': settings })
+        return render(request, 'loads.html', { 'data': data, 'roomNames': roomNames, 'settings': settings, 'report': report })
 
 def getDataToUpdate(request):
     roomNamesToTues = []
@@ -129,11 +131,11 @@ def getDataToUpdate(request):
     tueLine = []
     
     for i in range(len(request.POST.getlist('roomNameTue'))):
-        room_name = request.POST.getlist('roomNameTue')[i]
+        roomNameTue = request.POST.getlist('roomNameTue')[i]
         description = request.POST.getlist('descriptionTue')[i]
         power = Tue.objects.get(name = description).power
         tueLine.append({
-            'room_name': room_name,
+            'roomNameTue': roomNameTue,
             'description': description,
             'power': power
         })
@@ -151,6 +153,18 @@ def getDataToUpdate(request):
     }
 
     return data
+
+def getReport(data):
+
+    lightingPowerDryArea = sum(room['lightingPower'] for room in data['dryAreas'])
+    lightingPowerWetArea = sum(room['lightingPower'] for room in data['wetAreas'])
+    tugPowerDryArea = sum(room['power'] for room in data['dryAreas'])
+    tugPowerWetArea = sum(room['power'] for room in data['wetAreas'])
+    lightingPower = lightingPowerDryArea + lightingPowerWetArea
+    tugPower = tugPowerDryArea + tugPowerWetArea
+    tuePower = sum(room['power'] for room in data['tues']['tueLine'])
+
+    return {'lightingPower': lightingPower, 'tugPower': tugPower, 'tuePower': tuePower}
 
 def getLightingPower(area, addLighting):
     if (area <= 6):
@@ -173,7 +187,7 @@ def getPowerWetAreas(quantity):
     elif (quantity <= 6):
         return 1800 + (quantity - 3) * 100
     return 1200 + (quantity - 2) * 100
-    
+      
 class CombinedArrays:
     def __init__(self, array1, array2):
         self.array1 = array1

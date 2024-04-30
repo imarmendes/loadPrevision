@@ -3,6 +3,11 @@
 
 {% block content %}
     <div>
+        <h3>
+            Formulário para previsões de carga.
+        </h3>
+    </div>
+    <div>
         <form  action="{% url 'loads' %}" method="post">
             {% csrf_token %}
             <div>
@@ -96,7 +101,6 @@
                     <tr id="rowBotonIdDryAreas">
                         <td colspan="10" class="center">
                             <div class="d-grid gap-2 col-6 mx-auto">
-                                {% csrf_token %}
                                 <input class="btn btn-primary" type="submit" name="addLineDryArea" value="Adicionar linha - Áreas Secas">
                             </div>
                         </td>
@@ -145,7 +149,6 @@
                     <tr id="rowBotonIdWetAreas"></tr>
                         <td colspan="10" class="center">
                             <div class="d-grid gap-2 col-6 mx-auto">
-                                {% csrf_token %}
                                 <input class="btn btn-primary" type="submit" name="addLineWetArea" value="Adicionar linha - Áreas Molhadas">
                             </div>
                         </td>
@@ -169,29 +172,29 @@
                     {% for d in data.tues.tueLine %}
                         <tr>
                             <td>
-                                <select name="roomNameTue" value="{{d.room}}" class="form-control w-100">
+                                <select name="roomNameTue" value="{{d.roomNameTue}}" class="form-control w-100">
                                     {% for name in data.tues.roomNamesToTues %}
-                                        {% if name == d.room %}
+                                        {% if name == d.roomNameTue %}
                                             <option value="{{name}}" selected>{{name}}</option>
                                         {% else %}
                                             <option value="{{name}}">{{name}}</option>
                                         {% endif %}
                                     {% endfor %}
-                                    {% if d.room == "" %}
+                                    {% if d.roomNameTue == "" %}
                                         <option selected>Selecione...</option>
                                     {% endif %}
                                 </select>
                             </td>
                             <td>
-                                <select name="descriptionTue" value="{{d.decription}}" class="form-control w-100">
+                                <select name="descriptionTue" value="{{d.description}}" class="form-control w-100">
                                     {% for name, power in data.tues.tuesData %}
-                                        {% if name == d.decription %}
+                                        {% if name == d.description %}
                                             <option value="{{name}}" selected>{{name}}</option>
                                         {% else %}
                                             <option value="{{name}}">{{name}}</option>
                                         {% endif %}
                                     {% endfor %}
-                                    {% if d.decription == "" %}
+                                    {% if d.description == "" %}
                                         <option selected>Selecione...</option>
                                     {% endif %}
                                 </select>
@@ -202,7 +205,6 @@
                     <tr id="rowBotonITues"></tr>
                         <td colspan="3" class="center">
                             <div class="d-grid gap-2 col-6 mx-auto">
-                                {% csrf_token %}
                                 <input 
                                     class="btn btn-primary" 
                                     type="submit" 
@@ -220,6 +222,11 @@
             </table>         
             </div>
         </form>
+    </div>
+    <div>
+        <h3>
+            Relatório das previsões de carga.
+        </h3>
     </div>
     <script src="{% static 'loads/js/loads.js' %}"></script>
 {% endblock %}

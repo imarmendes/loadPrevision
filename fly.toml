@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for loadprevision-thrumming-log-5928 on 2024-04-28T20:13:29-03:00
+# fly.toml app configuration file generated for loadprevision on 2024-04-29T12:11:48-03:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'loadprevision-thrumming-log-5928'
+app = 'loadprevision'
 primary_region = 'gig'
 console_command = '/code/manage.py shell'
 

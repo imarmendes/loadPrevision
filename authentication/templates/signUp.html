@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <h3 class="mt-5 mb-4 text-center">Cadastre-se para acessar a plataforma.</h3>
+        <div class="col justify-content-center">
+            <div class="col-md-6">
+                <form action="{% url 'signup' %}" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Usuário:</label>
+                        <input type="text" id="username" name="username" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password1" class="form-label">Senha:</label>
+                        <input type="password" id="password1" name="password1" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password2" class="form-label">Confirme a senha:</label>
+                        <input type="password" id="password2" name="password2" class="form-control" required>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Cadastrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
