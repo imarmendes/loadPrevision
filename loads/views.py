@@ -1,8 +1,12 @@
 import math
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
-from .models import RoomName, Tue
+from django.shortcuts import render, redirect
+from .models import DemandFactor1, DemandFactor2, Measurements, RoomName, Tue
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+import json
 
+@login_required
 def loads(request):
     data = {}
     settings = {}
@@ -25,36 +29,15 @@ def loads(request):
     if request.method == 'POST':
         data = getDataToUpdate(request)
         report = getReport(data)
-        print(report)
         
         if 'addLineDryArea' in request.POST:
-            data['dryAreas'].append({
-                'room': '', 
-                'length': '', 
-                'width': '', 
-                'area': '', 
-                'perimeter': '', 
-                'addLighting': '', 
-                'lightingPower': '', 
-                'addTug': '', 
-                'quantity': '', 
-                'power': ''
-            })
+            data['dryAreas'].append(getNewEmptyLine())
         elif 'addLineWetArea' in request.POST:
-            data['wetAreas'].append({
-                'room': '', 
-                'length': '', 
-                'width': '', 
-                'area': '', 
-                'perimeter': '', 
-                'addLighting': '', 
-                'lightingPower': '', 
-                'addTug': '', 
-                'quantity': '', 
-                'power': ''
-            })
+            data['wetAreas'].append(getNewEmptyLine())
         elif 'addLineTue' in request.POST:
             data['tues']['tueLine'].append({'room': '', 'description': '', 'power': '' })
+        elif 'saveProject' in request.POST:
+            return render(request, 'projects/create.html', { 'data': data})
         else:
             print("Nenhum botão foi clicado!")
 
@@ -131,6 +114,9 @@ def getDataToUpdate(request):
     tueLine = []
     
     for i in range(len(request.POST.getlist('roomNameTue'))):
+        if ( request.POST.getlist('descriptionTue')[i] == "Selecione..."):
+            continue
+
         roomNameTue = request.POST.getlist('roomNameTue')[i]
         description = request.POST.getlist('descriptionTue')[i]
         power = Tue.objects.get(name = description).power
@@ -163,8 +149,35 @@ def getReport(data):
     lightingPower = lightingPowerDryArea + lightingPowerWetArea
     tugPower = tugPowerDryArea + tugPowerWetArea
     tuePower = sum(room['power'] for room in data['tues']['tueLine'])
+    numberOfTue = len(data['tues']['tueLine'])
 
-    return {'lightingPower': lightingPower, 'tugPower': tugPower, 'tuePower': tuePower}
+    powerGruop = {
+        'lightingPower': lightingPower,
+        'tugPower': tugPower,
+        'tuePower': tuePower
+        }
+
+    lightingPowerPlusTugPower = lightingPower + tugPower
+    demandFactor1 = DemandFactor1.objects.filter(Q(min__lte=lightingPowerPlusTugPower) & Q(max__gte=lightingPowerPlusTugPower)).values_list('fd1', flat=True)[0]
+    demandFactor2 = DemandFactor2.objects.filter(tueNumber = numberOfTue).values_list('fd2', flat=True)[0]
+
+    instantPower = lightingPower + (tugPower * 0.8) + tuePower
+    maxDimension = lightingPowerPlusTugPower * demandFactor1 + tuePower * demandFactor2
+    standard = 'Monofásico' if maxDimension <= 8000 else 'Trifásico'
+
+    measurementsGroup = max(Measurements.objects.filter(demand__lte= maxDimension/1000).values(), key=lambda x: x['demand'])
+
+    standardGroup = { 
+        'standard': standard,
+        'instantPower':instantPower,
+        'maxDimension':maxDimension
+    }
+
+    return {
+        'powerGruop': powerGruop,
+        'measurementsGroup': measurementsGroup,
+        'standardGroup': standardGroup
+    }
 
 def getLightingPower(area, addLighting):
     if (area <= 6):
@@ -187,6 +200,20 @@ def getPowerWetAreas(quantity):
     elif (quantity <= 6):
         return 1800 + (quantity - 3) * 100
     return 1200 + (quantity - 2) * 100
+
+def getNewEmptyLine():
+    return {
+                'room': '', 
+                'length': '', 
+                'width': '', 
+                'area': '', 
+                'perimeter': '', 
+                'addLighting': '', 
+                'lightingPower': '', 
+                'addTug': '', 
+                'quantity': '', 
+                'power': ''
+            }
       
 class CombinedArrays:
     def __init__(self, array1, array2):

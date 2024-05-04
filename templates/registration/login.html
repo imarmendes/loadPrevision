@@ -6,7 +6,7 @@
         <h3 class="mt-5 mb-4 text-center">Bem-vindo! Por favor, faça login.</h3>
         <div class="col justify-content-center">
             <div class="col-md-6 mb-4 mx-auto">
-                <form action="{% url 'login' %}" method="post">
+                <form method="post">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="username" class="form-label">Usuário:</label>
@@ -16,16 +16,15 @@
                         <label for="password" class="form-label">Senha:</label>
                         <input type="password" id="password" name="password" class="form-control" required>
                     </div>
+                    {% if form.errors.items %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for k, v in form.errors.items %}
+                            {{ v }}
+                            {% endfor%}
+                        </div>
+                    {% endif %}
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary">Login</button>
-                    </div>
-                </form>
-            </div>
-            <div class="col-md-6 mx-auto">
-                <form action="{% url 'signup' %}" method="get">
-                    {% csrf_token %}                   
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">Cadastrar</button>
                     </div>
                 </form>
             </div>

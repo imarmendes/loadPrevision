@@ -16,9 +16,18 @@
     <!-- As a heading -->
     <nav style="background-color: rgb(54, 171, 238) !important;" class="navbar navbar-light bg-light">
       <div class="btn-group">
-        <a href="{% url 'home' %}" class="btn btn-primary {% if settings.currentPath == '/' %}active{% endif %}" {% if settings.currentPath == '/' %}aria-current="page"{% endif %}>Home</a>
-        <a href="{% url 'loads' %}" class="btn btn-primary {% if settings.currentPath == '/loads' %}active{% endif %}" {% if settings.currentPath == '/loads' %}aria-current="page"{% endif %}>Estudo de Cargas</a>
-        <a href="{% url 'about' %}" class="btn btn-primary {% if settings.currentPath == '/sobre' %}active{% endif %}" {% if settings.currentPath == '/sobre' %}aria-current="page"{% endif %}>Sobre</a>
+        <a href="{% url 'home' %}" class="btn btn-primary {% if request.path == '/' %}active{% endif %}" {% if request.path == '/' %}aria-current="page"{% endif %}>Home</a>
+        <a href="{% url 'loads' %}" class="btn btn-primary {% if request.path == '/loads' %}active{% endif %}" {% if request.path == '/loads' %}aria-current="page"{% endif %}>Estudo de Cargas</a>
+        <a href="{% url 'about' %}" class="btn btn-primary {% if request.path == '/about' %}active{% endif %}" {% if request.path == '/about' %}aria-current="page"{% endif %}>Sobre</a>
+      </div>
+      <div>
+        <a class="btn btn-success" href="{% url 'register' %}">Registrar</a>
+        {% if not request.user.is_authenticated %}
+          <a class="btn btn-outline-primary" href="{% url 'login' %}">Entrar</a>
+        {% else %}
+          <a class="btn btn-outline-danger" href="{% url 'logout' %}">Sair</a>
+        {% endif%}
+        <!-- <a href="{% url 'password_reset' %}">Esqueci minha senha</a> -->
       </div>
     </nav>
     <div class="container">
