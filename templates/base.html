@@ -17,7 +17,8 @@
     <nav style="background-color: rgb(54, 171, 238) !important;" class="navbar navbar-light bg-light">
       <div class="btn-group">
         <a href="{% url 'home' %}" class="btn btn-primary {% if request.path == '/' %}active{% endif %}" {% if request.path == '/' %}aria-current="page"{% endif %}>Home</a>
-        <a href="{% url 'loads' %}" class="btn btn-primary {% if request.path == '/loads' %}active{% endif %}" {% if request.path == '/loads' %}aria-current="page"{% endif %}>Estudo de Cargas</a>
+        <a href="{% url 'myProjects' %}" class="btn btn-primary {% if request.path == '/projects/' %}active{% endif %}" {% if request.path == '/projects/' %}aria-current="page"{% endif %}>Meus Projetos</a>
+        <a href="{% url 'loads' %}" class="btn btn-primary {% if request.path == '/loads/' %}active{% endif %}" {% if request.path == '/loads/' %}aria-current="page"{% endif %}>Estudo de Cargas</a>
         <a href="{% url 'about' %}" class="btn btn-primary {% if request.path == '/about' %}active{% endif %}" {% if request.path == '/about' %}aria-current="page"{% endif %}>Sobre</a>
       </div>
       <div>

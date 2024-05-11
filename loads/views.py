@@ -12,6 +12,8 @@ def loads(request):
     settings = {}
     currentPath = request.path
 
+    projectId = request.GET.get('projectId')
+
     settings['currentPath'] = currentPath
 
     dryRoomNames = RoomName.objects.filter(type=1).values_list('name', flat=True)
@@ -37,7 +39,7 @@ def loads(request):
         elif 'addLineTue' in request.POST:
             data['tues']['tueLine'].append({'room': '', 'description': '', 'power': '' })
         elif 'saveProject' in request.POST:
-            return render(request, 'projects/create.html', { 'data': data})
+            return redirect(f'/projects') 
         else:
             print("Nenhum botão foi clicado!")
 

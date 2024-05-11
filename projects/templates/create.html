@@ -1,7 +1,34 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-    <div>
-        create
+    <div class="container mt-5">
+        <h1 class="mb-4">Criar Projeto</h1>
+        <form method="post" class="row g-3">
+            {% csrf_token %}
+            <!-- Nome do Projeto -->
+            <div class="col-md-6">
+                <label for="projectName" class="form-label">Nome do Projeto *</label>
+                {{ form.projectName }}
+            </div>
+            <!-- Responsável -->
+            <div class="col-md-6">
+                <label for="responsible" class="form-label">Responsável</label>
+                {{ form.responsible }}
+            </div>
+            <!-- Endereço -->
+            <div class="col-md-12">
+                <label for="address" class="form-label">Endereço</label>
+                {{ form.address }}
+            </div>
+            <!-- ART -->
+            <div class="col-md-12">
+                <label for="art" class="form-label">ART</label>
+                {{ form.art }}
+            </div>
+            <!-- Botão de submit -->
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+        </form>
     </div>
 {% endblock %}

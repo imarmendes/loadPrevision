@@ -233,29 +233,63 @@
     {% if report.powerGruop.lightingPower or report.powerGruop.tugPower or report.powerGruop.tuePower %}
     <div class="container">
         <h3 class="mt-5 mb-4 text-center">Relatório das previsões de carga</h3>
-        <div class="row justify-content-center">
+        <div class="row justify-content-around">
             <div class="col-md-4">
-                    {% if report.powerGruop.lightingPower %}
-                    <div class="row mb-3">
-                        <div class="col form-control w-100">Potência total de Iluminação:</div>
-                        <div class="col">{{ report.powerGruop.lightingPower }}</div>
-                    </div>
-                    {% endif %}
-                    {% if report.powerGruop.tugPower %}
-                    <div class="row mb-3">
-                        <div class="col">Potência total TUGs:</div>
-                        <div class="col">{{ report.powerGruop.tugPower }}</div>
-                    </div>
-                    {% endif %}
-                    {% if report.powerGruop.tuePower %}
-                    <div class="row">
-                        <div class="col">Potência total TUEs:</div>
-                        <div class="col">{{ report.powerGruop.tuePower }}</div>
-                    </div>
-                    {% endif %}
+                <div class="row mb-3">
+                    <div class="col">Potência total de Iluminação:</div>
+                    <div class="col">{{ report.powerGruop.lightingPower }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">Potência total TUGs:</div>
+                    <div class="col">{{ report.powerGruop.tugPower }}</div>
+                </div>
+                <div class="row">
+                    <div class="col">Potência total TUEs:</div>
+                    <div class="col">{{ report.powerGruop.tuePower }}</div>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="row mb-3">
+                    <div class="col">Padrão de Fase:</div>
+                    <div class="col">{{ report.standardGroup.standard }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">Potência Instantânea:</div>
+                    <div class="col">{{ report.standardGroup.instantPower }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">Dimensionamento Máximo:</div>
+                    <div class="col">{{ report.standardGroup.maxDimension }}</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row mb-3">
+                    <div class="col">Demanda:</div>
+                    <div class="col">{{ report.measurementsGroup.demand }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">Disjuntor:</div>
+                    <div class="col">{{ report.measurementsGroup.circuitBreaker }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">Fase:</div>
+                    <div class="col">{{ report.measurementsGroup.phase }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">Neutro:</div>
+                    <div class="col">{{ report.measurementsGroup.neutral }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">Aterramento:</div>
+                    <div class="col">{{ report.measurementsGroup.grounding }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">Eletroduto:</div>
+                    <div class="col">{{ report.measurementsGroup.conduit }}</div>
+                </div>                
+            </div>
         </div>
+    </div>    
     {% endif %}
     <script src="{% static 'loads/js/loads.js' %}"></script>
 {% endblock %}
